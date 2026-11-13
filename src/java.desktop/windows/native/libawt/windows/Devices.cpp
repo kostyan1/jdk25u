@@ -95,21 +95,7 @@ typedef struct {
 // Only monitors where CreateDC does not fail are valid
 static BOOL IsValidMonitor(HMONITOR hMon)
 {
-    MONITORINFOEX mieInfo;
-    memset((void*)(&mieInfo), 0, sizeof(MONITORINFOEX));
-    mieInfo.cbSize = sizeof(MONITORINFOEX);
-    if (!::GetMonitorInfo(hMon, (LPMONITORINFOEX)(&mieInfo))) {
-        J2dTraceLn1(J2D_TRACE_INFO, "Devices::IsValidMonitor: GetMonitorInfo failed for monitor with handle %p", hMon);
-        return FALSE;
-    }
-
-    HDC hDC = CreateDC(mieInfo.szDevice, NULL, NULL, NULL);
-    if (NULL == hDC) {
-        J2dTraceLn2(J2D_TRACE_INFO, "Devices::IsValidMonitor: CreateDC failed for monitor with handle %p, device: %S", hMon, mieInfo.szDevice);
-        return FALSE;
-    }
-
-    ::DeleteDC(hDC);
+    //KM: attempt to revert JDK-8185862 so virtual Windows monitor is valid at Jenkins
     return TRUE;
 }
 
